@@ -92,28 +92,28 @@ app.delete('/delete/:id', async(req, res)=>{
   console.log(query)
 })
 
-  // app.put('/job/:id', async(req, res) =>{
-  //     const id = req.params.id;
-  //     const filter = {_id: new ObjectId(id)}
-  //     const options = {upsert: true};
-  //     const jobDetails = req.body;
-  //     const Product = {
-  //         $set: {
-  //             image: jobDetails.image,
-  //             date: jobDetails.date,
-  //             name: jobDetails.name, 
-  //             title: jobDetails.title, 
-  //             category: jobDetails.category, 
-  //             salary: jobDetails.salary, 
-  //             description: jobDetails.description, 
-  //             deadline: jobDetails.deadline, 
-  //             rating: jobDetails.rating
-  //         }
-  //     }
+  app.put('/job/:id', async(req, res) =>{
+      const id = req.params.id;
+      const filter = {_id: new ObjectId(id)}
+      const options = {upsert: true};
+      const jobDetails = req.body;
+      const Product = {
+          $set: {
+              image: jobDetails.image,
+              date: jobDetails.date,
+              name: jobDetails.name, 
+              title: jobDetails.title, 
+              category: jobDetails.category, 
+              salary: jobDetails.salary, 
+              description: jobDetails.description, 
+              deadline: jobDetails.deadline, 
+              rating: jobDetails.rating
+          }
+      }
 
-  //     const result = await jobsCollection.updateOne(filter, Product, options);
-  //     res.send(result);
-  // })
+      const result = await jobsCollection.updateOne(filter, Product, options);
+      res.send(result);
+  })
 
 
 
