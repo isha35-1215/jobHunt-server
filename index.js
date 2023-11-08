@@ -10,7 +10,7 @@ const port = process.env.PORT || 5000;
 //middleware
 app.use(cors({
   origin:[
-    'http://localhost:5173'
+    'http://localhost:5173','https://jobhunt-dc129.web.app'
   ],
   credentials: true
 }));
@@ -86,7 +86,7 @@ async function run() {
 
     app.get('/jobs/:name', async (req, res) => {
       const name = req.params.name;
-      console.log('cook cookies', req.cookies);
+      // console.log('cook cookies', req.cookies);
       const job = await jobsCollection.find({ name: name }).toArray();
       res.json(job);
     })
@@ -112,7 +112,7 @@ async function run() {
 
     app.get('/applied/:applicant', async (req, res) => {
       const applicant = req.params.applicant;
-      console.log('cook cookies', req.cookies);
+      // console.log('cook cookies', req.cookies);
       const job = await appliedCollection.find({ applicant: applicant }).toArray();
       res.json(job);
     })
