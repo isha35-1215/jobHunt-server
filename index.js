@@ -41,7 +41,7 @@ async function run() {
       res.send(result);
     })
 
-   
+
 
     app.get('/job/:category', async (req, res) => {
       const category = req.params.category;
@@ -56,66 +56,77 @@ async function run() {
       res.json(job);
     })
 
-    
 
-    app.get('/jobDetails/:id', async ( req, res) => {
+
+    app.get('/jobDetails/:id', async (req, res) => {
       const id = req.params.id;
       console.log(id);
-      const query = { _id : new  ObjectId(id)}
+      const query = { _id: new ObjectId(id) }
       const result = await jobsCollection.findOne(query);
       res.send(result);
-   })
+    })
 
 
-   app.post('/applied', async(req, res) => {
-    const appliedData = req.body;
-    console.log('appliedData', appliedData);
-    const result = await appliedCollection.insertOne(appliedData);
-    res.send(result);
- })
+    app.post('/applied', async (req, res) => {
+      const appliedData = req.body;
+      console.log('appliedData', appliedData);
+      const result = await appliedCollection.insertOne(appliedData);
+      res.send(result);
+    })
 
 
- app.get('/applied/:applicant', async (req, res) => {
-  const applicant = req.params.applicant;
-  const job = await appliedCollection.find({ applicant: applicant }).toArray();
-  res.json(job);
-})
+    app.get('/applied/:applicant', async (req, res) => {
+      const applicant = req.params.applicant;
+      const job = await appliedCollection.find({ applicant: applicant }).toArray();
+      res.json(job);
+    })
 
 
-app.delete('/delete/:id', async(req, res)=>{
-  const deleteId = req.params.id;
-  console.log(deleteId);
-  const query = {_id : new ObjectId(deleteId)}
-  const result = await jobsCollection.deleteOne(query)
-  console.log(result)
-  res.send(result)
-  console.log(query)
-})
+    app.delete('/delete/:id', async (req, res) => {
+      const deleteId = req.params.id;
+      console.log(deleteId);
+      const query = { _id: new ObjectId(deleteId) }
+      const result = await jobsCollection.deleteOne(query)
+      console.log(result)
+      res.send(result)
+      console.log(query)
+    })
 
-  app.put('/job/:id', async(req, res) =>{
+    app.put('/job/:id', async (req, res) => {
       const id = req.params.id;
-      const filter = {_id: new ObjectId(id)}
-      const options = {upsert: true};
+      const filter = { _id: new ObjectId(id) }
+      const options = { upsert: true };
       const jobDetails = req.body;
       const Product = {
-          $set: {
-              image: jobDetails.image,
-              date: jobDetails.date,
-              name: jobDetails.name, 
-              title: jobDetails.title, 
-              category: jobDetails.category, 
-              salary: jobDetails.salary, 
-              description: jobDetails.description, 
-              deadline: jobDetails.deadline, 
-              rating: jobDetails.rating
-          }
+        $set: {
+          date: jobDetails.date,
+          title: jobDetails.title,
+          category: jobDetails.category,
+          image: jobDetails.image,
+          salary: jobDetails.salary,
+          deadline: jobDetails.deadline,
+          description: jobDetails.description,
+          number: jobDetails.number,
+        }
       }
 
       const result = await jobsCollection.updateOne(filter, Product, options);
       res.send(result);
-  })
+    })
 
-
+    app.patch('/job/:id', async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) }
+      const options = { upsert: true }
+      const updateApplicants = req.body;
+      const countNumber = {
+        $set: {
+          number: updateApplicants.number,
+        }
+      }
+      const result = await jobsCollection.updateOne(filter, countNumber, options);
+      res.send(result);
+    })
 
 
 
