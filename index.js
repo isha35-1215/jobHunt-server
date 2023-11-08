@@ -7,7 +7,12 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 //middleware
-app.use(cors());
+app.use(cors({
+  origin:[
+    'http://localhost:5173'
+  ],
+  credentials: true
+}));
 app.use(express.json());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.flmhf7e.mongodb.net/?retryWrites=true&w=majority`;
@@ -32,7 +37,14 @@ async function run() {
     app.post('/jwt', async(req, res)=>{
       const user = res.body;
       console.log('user for token', user);
-      const token = jwt.sign(user, 'secret', {expiresIn: '1hr'})
+      const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '1hr'});
+      
+      res.cookie('token', token, {
+        httpOnly: true,
+        secure: false,
+      });
+
+      res.send({success: true});
     })
 
 
