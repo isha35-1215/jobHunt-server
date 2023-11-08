@@ -92,7 +92,7 @@ async function run() {
       console.log(query)
     })
 
-    app.put('/job/:id', async (req, res) => {
+    app.put('/jobDetails/:id', async (req, res) => {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) }
       const options = { upsert: true };
@@ -109,7 +109,6 @@ async function run() {
           number: jobDetails.number,
         }
       }
-
       const result = await jobsCollection.updateOne(filter, Product, options);
       res.send(result);
     })
