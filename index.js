@@ -30,7 +30,9 @@ async function run() {
     const appliedCollection = client.db('jobHuntDB').collection('applied')
 
     app.post('/jwt', async(req, res)=>{
-
+      const user = res.body;
+      console.log('user for token', user);
+      const token = jwt.sign(user, 'secret', {expiresIn: '1hr'})
     })
 
 
