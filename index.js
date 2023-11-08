@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const jwt = require('jsonwebtoken');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config();
 const app = express();
@@ -27,6 +28,18 @@ async function run() {
 
     const jobsCollection = client.db('jobHuntDB').collection('jobs')
     const appliedCollection = client.db('jobHuntDB').collection('applied')
+
+    app.post('/jwt', async(req, res)=>{
+
+    })
+
+
+
+
+
+
+
+
 
     app.post('/job', async (req, res) => {
       const jobData = req.body;
