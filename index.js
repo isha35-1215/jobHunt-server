@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config();
 const app = express();
@@ -14,6 +15,7 @@ app.use(cors({
   credentials: true
 }));
 app.use(express.json());
+app.use(cookieParser());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.flmhf7e.mongodb.net/?retryWrites=true&w=majority`;
 
@@ -34,20 +36,25 @@ async function run() {
     const jobsCollection = client.db('jobHuntDB').collection('jobs')
     const appliedCollection = client.db('jobHuntDB').collection('applied')
 
-    app.post('/jwt', async(req, res)=>{
-      const user = res.body;
-      console.log('user for token', user);
-      const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '1hr'});
-      
+    // Auth Related API
+
+    app.post('/jwt', async (req, res) => {
+      const user = req.body;
+      console.log("user for token", user);
+      const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' })
+
       res.cookie('token', token, {
         httpOnly: true,
-        secure: false,
-      });
-
-      res.send({success: true});
+        secure: false
+      })
+        .send({ success: true })
     })
 
-
+    app.post('/logout', async (req, res) => {
+      const user = req.body;
+      console.log("logOut User", user);
+      res.clearCookie('token', { maxAge: 0 }).send({ success: true })
+    })
 
 
 
@@ -79,6 +86,7 @@ async function run() {
 
     app.get('/jobs/:name', async (req, res) => {
       const name = req.params.name;
+      console.log('cook cookies', req.cookies);
       const job = await jobsCollection.find({ name: name }).toArray();
       res.json(job);
     })
@@ -104,6 +112,7 @@ async function run() {
 
     app.get('/applied/:applicant', async (req, res) => {
       const applicant = req.params.applicant;
+      console.log('cook cookies', req.cookies);
       const job = await appliedCollection.find({ applicant: applicant }).toArray();
       res.json(job);
     })
